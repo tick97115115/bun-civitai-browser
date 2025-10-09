@@ -3,13 +3,30 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev:server": "NODE_ENV=development && bun run --watch src/dev.ts ",
+    "prisma:generate": "prisma generate --schema ./schema.prisma",
+    "prisma:reset": "prisma migrate reset --schema ./schema.prisma",
+    "prisma:migrate": "prisma migrate dev --schema ./schema.prisma"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@elysiajs/cors": "^1.4.0",
+    "@elysiajs/openapi": "^1.4.11",
+    "@prisma/client": "^6.17.0",
+    "@synapsenwerkstatt/prisma-bun-sqlite-adapter": "^1.2.2",
+    "arktype": "^2.1.22",
+    "conf": "^15.0.2",
+    "elysia": "latest",
+    "fast-glob": "^3.3.3",
+    "ky": "^1.11.0",
+    "lodash-es": "^4.17.21",
+    "path-exists": "^5.0.0",
+    "sanitize-basename": "^2.0.2"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@types/conf": "^3.0.3",
+    "@types/lodash-es": "^4.17.12",
+    "bun-types": "latest",
+    "prisma": "^6.17.0"
   },
   "module": "src/index.js"
 }
