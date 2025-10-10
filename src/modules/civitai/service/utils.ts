@@ -1,10 +1,8 @@
 import { promises as fs } from "node:fs";
 import { join } from "node:path";
 import { pathExists } from "path-exists";
-import { getSettings } from "../../settings/service";
-import { getRequester } from "./requests";
 import fg from "fast-glob";
-import { KyInstance } from "ky";
+import { getSettings } from "../../settings/service";
 
 /**
  * 检查文件夹内是否存在至少一个 .safetensors 文件
@@ -83,5 +81,5 @@ export function obj2UrlSearchParams(params: object) {
       urlSearchParams.append(key, String(value));
     }
   }
-  return urlSearchParams
+  return urlSearchParams;
 }
