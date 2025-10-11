@@ -7,3 +7,9 @@ export const _settingsValidator = type({
   httpProxy: "string",
 });
 export type Settings = typeof _settingsValidator.infer;
+
+export const defaultSettings: Settings = {
+  basePath: '',
+  civitaiToken: '',
+  httpProxy: ''
+};
