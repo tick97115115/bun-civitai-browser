@@ -11,9 +11,11 @@
   "dependencies": {
     "@elysiajs/cors": "^1.4.0",
     "@elysiajs/eden": "^1.4.1",
+    "@elysiajs/html": "^1.4.0",
     "@elysiajs/openapi": "^1.4.11",
     "@prisma/client": "^6.17.0",
     "@synapsenwerkstatt/prisma-bun-sqlite-adapter": "^1.2.2",
+    "antd": "^5.27.4",
     "arktype": "^2.1.22",
     "conf": "^15.0.2",
     "elysia": "latest",

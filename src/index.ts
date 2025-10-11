@@ -1,12 +1,15 @@
 import { Elysia } from "elysia";
-import { cors } from '@elysiajs/cors'
-import { openapi } from '@elysiajs/openapi'
+import { cors } from "@elysiajs/cors";
+import { openapi } from "@elysiajs/openapi";
+import { html } from "@elysiajs/html";
 import SettingsRouter from "./modules/settings";
+import homePage from "./html";
 
 const app = new Elysia()
-  .get("/", () => "Hello Elysia")
+  .use(html())
   .use(cors())
   .use(openapi())
+  .get("/", () => homePage())
   .use(SettingsRouter)
   .listen(3000);
 
