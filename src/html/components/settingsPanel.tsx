@@ -107,9 +107,13 @@ function App() {
         <Button
           type="primary"
           htmlType="button"
-          onClick={() => console.log(settings)}
+          // onClick={() => console.log(settings)}
+          onClick={async () => {
+            await edenTreaty.settings.api.settings.post(settings);
+            setSettings(settings);
+          }}
         >
-          Submit
+          Save
         </Button>
       </Form.Item>
     </Form>
