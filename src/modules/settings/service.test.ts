@@ -14,7 +14,7 @@ describe(`test settings module`, () => {
       const settings = setSettings({
         civitaiToken: testUseToken,
       });
-      expect(getSettings(true).civitaiToken).toBe(testUseToken);
+      expect(getSettings().civitaiToken).toBe(testUseToken);
     } catch (error) {
       throw error;
     } finally {

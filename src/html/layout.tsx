@@ -97,6 +97,7 @@ function PublicMenuModal(
       onOk={handleOk}
       onCancel={handleCancel}
       footer={null}
+      destroyOnHidden={true} // force refetch data by force destory DOM
     >
       {children}
     </Modal>

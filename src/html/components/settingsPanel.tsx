@@ -12,7 +12,7 @@ import { LockFilled } from "@ant-design/icons";
 import { useAtom } from "jotai";
 import { useQuery } from "@tanstack/react-query";
 import { settingsImmerAtom } from "../store";
-import { type Settings } from "../../modules/settings/models";
+import { defaultSettings, type Settings } from "../../modules/settings/models";
 import { edenTreaty } from "../utils";
 
 function App() {
@@ -24,6 +24,8 @@ function App() {
         setSettings(data.data!);
         return settings;
       }),
+    // refetchOnMount: true,
+    // staleTime: 1,
   });
   if (isPending) return "Loading...";
 
