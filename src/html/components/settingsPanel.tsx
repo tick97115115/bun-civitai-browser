@@ -1,18 +1,9 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Card,
-  Checkbox,
-  Form,
-  type FormProps,
-  Input,
-  Space,
-} from "antd";
-import { LockFilled } from "@ant-design/icons";
+import { Button, Form, type FormProps, Input } from "antd";
 import { useAtom } from "jotai";
 import { useQuery } from "@tanstack/react-query";
 import { settingsImmerAtom } from "../store";
-import { defaultSettings, type Settings } from "../../modules/settings/models";
+import { type Settings } from "../../modules/settings/models";
 import { edenTreaty } from "../utils";
 
 function App() {

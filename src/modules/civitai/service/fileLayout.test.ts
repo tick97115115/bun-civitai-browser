@@ -2,9 +2,8 @@ import { ModelIdLayout } from "./fileLayout";
 import { describe, test, expect } from "bun:test";
 import { join } from "node:path";
 import sanitize from "sanitize-basename";
-import * as _ from "lodash-es";
-import { ModelId, ModelsResponse, models_response } from "../models/models_endpoint";
-import { readFileSync } from "node:fs";
+import { last } from "es-toolkit/compat";
+import { Model, ModelsResponse, models_response } from "../models/models_endpoint";
 import "dotenv/config";
 import { getSettings } from "../../settings/service";
 import fg from "fast-glob";
@@ -16,7 +15,7 @@ export const modelId1 = models_res.items[0];
 
 describe("test layout class", () => {
   const basePath = __dirname;
-  const milayout = new ModelIdLayout(basePath, modelId1 as ModelId);
+  const milayout = new ModelIdLayout(basePath, modelId1 as Model);
   const mv = modelId1.modelVersions[0];
   const mvlayout = milayout.getModelVersionLayout(mv.id);
   const mfile = mv.files[0];
@@ -45,7 +44,7 @@ describe("test layout class", () => {
 
   test("test get image path", () => {
     expect(mvlayout.getMediaPath(mimg.id)).toBe(
-      join(mvlayout.imgDir, `${mimg.id}.${_.last(mimg.url.split("."))}`)
+      join(mvlayout.imgDir, `${mimg.id}.${last(mimg.url.split("."))}`)
     );
   });
 });

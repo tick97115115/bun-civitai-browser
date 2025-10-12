@@ -74,7 +74,7 @@ export type ModelVersion = typeof model_version.infer;
 import { creator } from "./creators_endpoint";
 // https://www.jsondiff.com/ 找到共有属性名
 
-export const model_id = type({
+export const model = type({
   id: "number.integer",
   name: "string",
   description: "string | null",
@@ -101,10 +101,10 @@ export const model_id = type({
   tags: "string[]",
   modelVersions: model_version.array(),
 });
-export type ModelId = typeof model_id.infer;
+export type Model = typeof model.infer;
 
 export const models_response = type({
-  items: model_id.array(),
+  items: model.array(),
   metadata: {
     "totalItems?": "number.integer",
     "currentPage?": "number.integer",

@@ -1,9 +1,9 @@
 import ky, { KyResponse } from "ky";
 import { type } from "arktype";
-import { Elysia, InvertedStatusMap } from "elysia";
-import { models_request_opts, models_response } from "./models/models_endpoint";
-import { getSettings } from "../settings/service";
-import { obj2UrlSearchParams } from "./service/utils";
+import { Elysia } from "elysia";
+import { models_request_opts, models_response } from "../models/models_endpoint";
+import { getSettings } from "../../settings/service";
+import { obj2UrlSearchParams } from "../service/utils";
 
 export function getRequester() {
   const settingsInfo = getSettings();
@@ -62,7 +62,7 @@ async function modelsResProcess(kyRes: KyResponse) {
   return data;
 }
 
-const ivitaiApiMirror = new Elysia({ prefix: "/api/v1" })
+const civitaiApiMirror = new Elysia({ prefix: "/api/v1" })
   .error({ ApiCommunicationError, ApiInvokeErrorResponse })
   .onError(({ code, error, status }) => {
     switch (code) {
@@ -109,4 +109,4 @@ const ivitaiApiMirror = new Elysia({ prefix: "/api/v1" })
     }
   );
 
-export default new Elysia({ prefix: "/civitai" }).use(ivitaiApiMirror);
+export default new Elysia({ prefix: "/civitai" }).use(civitaiApiMirror);

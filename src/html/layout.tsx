@@ -1,73 +1,23 @@
-import { Flex, Layout, Menu, type MenuProps, Modal } from "antd";
-import { type } from "arktype";
+import { type MenuProps, Modal, Tabs, type TabsProps } from "antd";
 import React, { useState } from "react";
-import {
-  AppstoreOutlined,
-  FileSearchOutlined,
-  MailOutlined,
-  SearchOutlined,
-  SettingFilled,
-  SettingOutlined,
-} from "@ant-design/icons";
-import SearchPanel from "./components/searchPanel";
+import { SettingFilled } from "@ant-design/icons";
 import SettingsPanel from "./components/settingsPanel";
-const { Header, Footer, Sider, Content } = Layout;
+import LocalGallery from "./components/localGallery";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 enum MenuItemKeys {
-  Search = "search",
   Settings = "settings",
+  Local = `Local`,
+  CivitAI = `CivitAI`,
 }
 
 const items: MenuItem[] = [
-  {
-    label: "Search",
-    key: MenuItemKeys.Search,
-    icon: <SearchOutlined />,
-  },
   {
     label: "Settings",
     key: MenuItemKeys.Settings,
     icon: <SettingFilled />,
   },
-  // {
-  //   label: "Navigation Two",
-  //   key: "app",
-  //   icon: <AppstoreOutlined />,
-  //   disabled: true,
-  // },
-  // {
-  //   label: "Navigation Three - Submenu",
-  //   key: "SubMenu",
-  //   icon: <SettingOutlined />,
-  //   children: [
-  //     {
-  //       type: "group",
-  //       label: "Item 1",
-  //       children: [
-  //         { label: "Option 1", key: "setting:1" },
-  //         { label: "Option 2", key: "setting:2" },
-  //       ],
-  //     },
-  //     {
-  //       type: "group",
-  //       label: "Item 2",
-  //       children: [
-  //         { label: "Option 3", key: "setting:3" },
-  //         { label: "Option 4", key: "setting:4" },
-  //       ],
-  //     },
-  //   ],
-  // },
-  // {
-  //   key: "alipay",
-  //   label: (
-  //     <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
-  //       Navigation Four - Link
-  //     </a>
-  //   ),
-  // },
 ];
 
 function PublicMenuModal(
@@ -104,6 +54,34 @@ function PublicMenuModal(
   );
 }
 
+function galleryContent() {
+  const galleries: TabsProps["items"] = [
+    {
+      label: `Local`,
+      key: MenuItemKeys.Local,
+      children: <LocalGallery />,
+    },
+    {
+      label: `CivitAI`,
+      key: MenuItemKeys.CivitAI,
+      children: `CivitAI`,
+    },
+    {
+      label: `Settings`,
+      key: MenuItemKeys.Settings,
+      children: <SettingsPanel />,
+      destroyOnHidden: true,
+    },
+  ];
+  return (
+    <Tabs
+      defaultActiveKey="1"
+      centered
+      items={galleries}
+    />
+  );
+}
+
 function app() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(<></>);
@@ -116,9 +94,9 @@ function app() {
   const onClick: MenuProps["onClick"] = (e) => {
     setCurrent(e.key);
     switch (e.key) {
-      case MenuItemKeys.Search:
-        showMenuModal({ children: <SearchPanel /> });
-        break;
+      // case MenuItemKeys.Search:
+      //   showMenuModal({ children: <SearchPanel /> });
+      //   break;
       case MenuItemKeys.Settings:
         showMenuModal({ children: <SettingsPanel /> });
         break;
@@ -128,24 +106,9 @@ function app() {
     }
   };
   return (
-    <Layout className="h-dvh">
-      <Header>
-        <Menu
-          onClick={onClick}
-          selectedKeys={[current]}
-          mode="horizontal"
-          items={items}
-        >
-        </Menu>
-        <PublicMenuModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          children={modalContent}
-        />
-      </Header>
-      <Content>Content</Content>
-      {/* <Footer>Footer</Footer> */}
-    </Layout>
+    <div className="h-dvh">
+      {galleryContent()}
+    </div>
   );
 }
 

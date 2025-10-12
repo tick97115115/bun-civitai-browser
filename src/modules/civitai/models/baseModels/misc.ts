@@ -1,5 +1,5 @@
 import { type } from "arktype";
-import * as _ from "lodash-es";
+import { map } from "es-toolkit/compat";
 
 // https://www.jsondiff.com/ 找到共有属性名
 
@@ -29,7 +29,7 @@ export const model_types = type.enumerated(
 export type ModelTypes = typeof model_types.infer;
 export const ModelTypesArray = (() => {
   const modelTypeUnits = model_types.json as arkUnites;
-  return _.map(modelTypeUnits, function (u) {
+  return map(modelTypeUnits, function (u) {
     return u.unit;
   });
 })();
@@ -40,7 +40,7 @@ export const models_request_period = type(
 export type ModelsRequestPeriod = typeof models_request_period.infer;
 export const ModelsRequestPeriodArray = (() => {
   const modelsRequestPeriodUnits = models_request_period.json as arkUnites;
-  return _.map(modelsRequestPeriodUnits, function (u) {
+  return map(modelsRequestPeriodUnits, function (u) {
     return u.unit;
   });
 })();
@@ -56,7 +56,7 @@ export const models_request_sort = type(
 export type ModelsRequestSort = typeof models_request_sort.infer;
 export const ModelsRequestSortArray = (() => {
   const ModelsRequestSortUnits = models_request_sort.json as arkUnites;
-  return _.map(ModelsRequestSortUnits, function (u) {
+  return map(ModelsRequestSortUnits, function (u) {
     return u.unit;
   });
 })();
@@ -118,7 +118,7 @@ export const base_models = type.enumerated(
 export type BaseModels = typeof base_models.infer;
 export const BaseModelsArray = (() => {
   const baseModelUnits = base_models.json as arkUnites;
-  return _.map(baseModelUnits, function (u) {
+  return map(baseModelUnits, function (u) {
     return u.unit;
   });
 })();

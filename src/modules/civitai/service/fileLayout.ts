@@ -1,15 +1,16 @@
-import { normalize, join, isAbsolute } from "node:path";
+import { normalize, join } from "node:path";
 import sanitize from "sanitize-basename";
-import * as _ from "lodash-es";
+import { find } from "es-toolkit/compat";
 import type {
-  ModelId,
+  Model,
   ModelVersion,
   ModelVersionFile,
   ModelVersionImage,
 } from "../models/models_endpoint";
 import { ModelTypes } from "../models/baseModels/misc";
-import { findModelVersion } from "../models/utils";
+import { findModelVersion } from "../service/utils";
 import { getSettings } from "../../settings/service";
+import { extractFilenameFromUrl } from "../service/utils";
 // import { pathExists } from "path-exists"; // use Bun.file() to locate file and use the returned object's exists() function to ensure if it exists.
 
 /**
@@ -20,37 +21,6 @@ import { getSettings } from "../../settings/service";
  * {baseDir} / "media" / {imageId}.xxx
  */
 
-/**
- * Extracts the filename from a valid URL
- * @param url The URL string to process
- * @returns The filename portion of the URL
- * @throws {Error} If the input is not a valid URL
- */
-export function extractFilenameFromUrl(url: string): string {
-  // Validate URL
-  let parsedUrl: URL;
-  try {
-    parsedUrl = new URL(url);
-  } catch (e) {
-    throw new Error("Invalid URL provided");
-  }
-
-  // Get the pathname and split by slashes
-  const pathParts = parsedUrl.pathname
-    .split("/")
-    .filter((part) => part.trim() !== "");
-
-  // If no path parts exist, return empty string
-  if (pathParts.length === 0) return "";
-
-  // Get the last part (filename)
-  const filenameWithParams = pathParts[pathParts.length - 1];
-
-  // Remove any query parameters from the filename
-  const filename = filenameWithParams.split(/[?#]/)[0];
-
-  return filename;
-}
 
 export function getModelIdPath(
   basePath: string,
@@ -148,7 +118,7 @@ export class ModelVersionLayout {
   }
 
   findFile(fileId: number): ModelVersionFile {
-    const file = _.find(this.modelVersion.files, function (file) {
+    const file = find(this.modelVersion.files, function (file) {
       return file.id === fileId;
     });
     if (file === undefined) {
@@ -172,7 +142,7 @@ export class ModelVersionLayout {
   }
 
   findMedia(mediaId: number): ModelVersionImage {
-    const img = _.find(this.modelVersion.images, function (img) {
+    const img = find(this.modelVersion.images, function (img) {
       return img.id === mediaId;
     });
     if (img === undefined) {
@@ -198,7 +168,7 @@ export class ModelVersionLayout {
 export class ModelIdLayout {
   imgDir: string;
   modelIdPath: string;
-  constructor(public basePath: string, public modelId: ModelId) {
+  constructor(public basePath: string, public modelId: Model) {
     this.modelIdPath = getModelIdPath(
       basePath,
       this.modelId.type,

@@ -1,57 +1,54 @@
-import { promises as fs } from "node:fs";
-import { join } from "node:path";
-import { pathExists } from "path-exists";
-import fg from "fast-glob";
-import { getSettings } from "../../settings/service";
+import type { Model, ModelVersion } from "../models/models_endpoint";
+import { find } from "es-toolkit/compat";
+
+export function findModelVersion(
+  modelId: Model,
+  modelVersionId: number
+): ModelVersion {
+  const modelVersion = find(modelId.modelVersions, function (mv) {
+    return mv.id === modelVersionId;
+  });
+  if (modelVersion === undefined) {
+    throw new Error(`model have no version id: ${modelVersionId}`);
+  }
+  return modelVersion;
+}
 
 /**
- * 检查文件夹内是否存在至少一个 .safetensors 文件
- * @param dirPath 文件夹的绝对路径
- * @returns Promise<boolean> 是否存在 .safetensors 文件
+ * Extracts the filename from a valid URL
+ * @param url The URL string to process
+ * @returns The filename portion of the URL
+ * @throws {Error} If the input is not a valid URL
  */
-export async function hasSafetensorsFile(dirPath: string): Promise<boolean> {
+export function extractFilenameFromUrl(url: string): string {
+  // Validate URL
+  let parsedUrl: URL;
   try {
-    const files = await fs.readdir(dirPath);
-
-    for (const file of files) {
-      const fullPath = join(dirPath, file);
-      const stats = await fs.stat(fullPath);
-
-      if (stats.isFile() && file.endsWith(".safetensors")) {
-        return true; // 找到立即返回 true
-      }
-    }
-
-    return false; // 遍历完成未找到
-  } catch (error) {
-    console.error(`Error scanning directory ${dirPath}:`, error);
-    return false; // 出错时返回 false
+    parsedUrl = new URL(url);
+  } catch (e) {
+    throw new Error("Invalid URL provided");
   }
-}
 
-export async function checkIfModelVersionOnDisk(modelVersionPath: string) {
-  if (
-    (await pathExists(modelVersionPath)) &&
-    (await hasSafetensorsFile(modelVersionPath))
-  ) {
-    return true;
-  }
-  return false;
-}
+  // Get the pathname and split by slashes
+  const pathParts = parsedUrl.pathname
+    .split("/")
+    .filter((part) => part.trim() !== "");
 
-export async function scanModels() {
-  const expression =
-    process.platform === "win32"
-      ? `${fg.convertPathToPattern(getSettings().basePath)}/**/*.safetensors`
-      : `${getSettings().basePath}/**/*.safetensors`;
-  const safetensors = await fg.async(expression);
-  return safetensors;
-}
+  // If no path parts exist, return empty string
+  if (pathParts.length === 0) return "";
 
+  // Get the last part (filename)
+  const filenameWithParams = pathParts[pathParts.length - 1];
+
+  // Remove any query parameters from the filename
+  const filename = filenameWithParams.split(/[?#]/)[0];
+
+  return filename;
+}
 /**
- * 去掉文件名的后缀（扩展名）
- * @param filename 完整的文件名（可以包含路径）
- * @returns 不包含后缀的文件名
+ * remove suffix from a filename（ext name）
+ * @param filename complete filename（could contain path info）
+ * @returns filename which excluded suffix name.
  */
 export function removeFileExtension(filename: string): string {
   // 处理路径分隔符（兼容Windows和Unix）

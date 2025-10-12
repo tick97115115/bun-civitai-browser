@@ -4,20 +4,15 @@ import { openapi } from "@elysiajs/openapi";
 import { html } from "@elysiajs/html";
 import { staticPlugin } from '@elysiajs/static';
 import SettingsRouter from "./modules/settings";
-import homePage, { files, index } from "./html/index.html";
+import CivitAIRouter from "./modules/civitai/index";
 
-const home = new Elysia({
-  serve: {
-
-  }
-})
 const app = new Elysia()
-  .get("/", () => homePage)
   .use(html())
   .use(cors())
   .use(openapi())
   .use(staticPlugin())
   .use(SettingsRouter)
+  .use(CivitAIRouter)
   .listen(3000);
 export type App = typeof app
 
