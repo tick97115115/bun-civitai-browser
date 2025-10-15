@@ -3,9 +3,7 @@ import { getSettings } from "../../settings/service";
 import { getMediaDir } from "../service/fileLayout";
 import { join } from "node:path";
 
-const mediaController = new Elysia({ prefix: "/media" })
+export default new Elysia({ prefix: "/media" })
   .get("/:filename", ({ params: { filename } }) =>
     file(join(getMediaDir(getSettings().basePath), filename))
   )
-
-export default new Elysia({ prefix: `/local` }).use(mediaController)

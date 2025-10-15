@@ -30,14 +30,6 @@ export function getModelIdPath(
   return join(normalize(basePath), modelType, modelId.toString());
 }
 
-export function getMediaDir(basePath: string) {
-  return join(basePath, "media");
-}
-
-export function getMediaFilePathByFileName(fileName: string) {
-  return join(getMediaDir(getSettings().basePath), fileName);
-}
-
 export function getApiInfoJsonFileName(id: number): string {
   return `${id}.api-info.json`;
 }
@@ -75,6 +67,14 @@ export function getModelVersionApiInfoJsonPath(
     getModelVersionPath(basePath, modelType, modelId, modelVersionId),
     getApiInfoJsonFileName(modelVersionId)
   );
+}
+
+export function getMediaDir(basePath: string) {
+  return join(basePath, "media");
+}
+
+export function getMediaFilePathByFileName(fileName: string) {
+  return join(getMediaDir(getSettings().basePath), fileName);
 }
 
 // // Test cases

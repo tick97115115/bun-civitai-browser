@@ -4,6 +4,7 @@ import { Elysia } from "elysia";
 import { models_request_opts, models_response } from "../models/models_endpoint";
 import { getSettings } from "../../settings/service";
 import { obj2UrlSearchParams } from "../service/utils";
+import mediaRouter from "./media";
 
 export function getRequester() {
   const settingsInfo = getSettings();
@@ -109,4 +110,4 @@ const civitaiApiMirror = new Elysia({ prefix: "/api/v1" })
     }
   );
 
-export default new Elysia({ prefix: "/civitai" }).use(civitaiApiMirror);
+export default new Elysia({ prefix: "/civitai" }).use(civitaiApiMirror).use(mediaRouter);
