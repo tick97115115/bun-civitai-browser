@@ -1,0 +1,14 @@
+import type { Prisma } from '../../src/modules/db/generated/client';
+import * as z from 'zod';
+import { CreatorOrderByWithRelationInputObjectSchema as CreatorOrderByWithRelationInputObjectSchema } from './objects/CreatorOrderByWithRelationInput.schema';
+import { CreatorWhereInputObjectSchema as CreatorWhereInputObjectSchema } from './objects/CreatorWhereInput.schema';
+import { CreatorWhereUniqueInputObjectSchema as CreatorWhereUniqueInputObjectSchema } from './objects/CreatorWhereUniqueInput.schema';
+import { CreatorCountAggregateInputObjectSchema as CreatorCountAggregateInputObjectSchema } from './objects/CreatorCountAggregateInput.schema';
+import { CreatorMinAggregateInputObjectSchema as CreatorMinAggregateInputObjectSchema } from './objects/CreatorMinAggregateInput.schema';
+import { CreatorMaxAggregateInputObjectSchema as CreatorMaxAggregateInputObjectSchema } from './objects/CreatorMaxAggregateInput.schema';
+import { CreatorAvgAggregateInputObjectSchema as CreatorAvgAggregateInputObjectSchema } from './objects/CreatorAvgAggregateInput.schema';
+import { CreatorSumAggregateInputObjectSchema as CreatorSumAggregateInputObjectSchema } from './objects/CreatorSumAggregateInput.schema';
+
+export const CreatorAggregateSchema: z.ZodType<Prisma.CreatorAggregateArgs> = z.object({ orderBy: z.union([CreatorOrderByWithRelationInputObjectSchema, CreatorOrderByWithRelationInputObjectSchema.array()]).optional(), where: CreatorWhereInputObjectSchema.optional(), cursor: CreatorWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), CreatorCountAggregateInputObjectSchema ]).optional(), _min: CreatorMinAggregateInputObjectSchema.optional(), _max: CreatorMaxAggregateInputObjectSchema.optional(), _avg: CreatorAvgAggregateInputObjectSchema.optional(), _sum: CreatorSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.CreatorAggregateArgs>;
+
+export const CreatorAggregateZodSchema = z.object({ orderBy: z.union([CreatorOrderByWithRelationInputObjectSchema, CreatorOrderByWithRelationInputObjectSchema.array()]).optional(), where: CreatorWhereInputObjectSchema.optional(), cursor: CreatorWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), CreatorCountAggregateInputObjectSchema ]).optional(), _min: CreatorMinAggregateInputObjectSchema.optional(), _max: CreatorMaxAggregateInputObjectSchema.optional(), _avg: CreatorAvgAggregateInputObjectSchema.optional(), _sum: CreatorSumAggregateInputObjectSchema.optional() }).strict();

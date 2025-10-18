@@ -4,7 +4,7 @@ import { Elysia } from "elysia";
 import { models_request_opts, models_response } from "../models/models_endpoint";
 import { getSettings } from "../../settings/service";
 import { obj2UrlSearchParams } from "../service/utils";
-import mediaRouter from "./media";
+import localModelRouter from "./local";
 
 export function getRequester() {
   const settingsInfo = getSettings();
@@ -83,7 +83,7 @@ const civitaiApiMirror = new Elysia({ prefix: "/api/v1" })
   })
   .get(
     "/models",
-    async ({ query, status }) => {
+    async ({ query }) => {
       const requester = getRequester();
       const res = await requester.get("https://civitai.com/api/v1/models", {
         searchParams: obj2UrlSearchParams(query),
@@ -98,7 +98,7 @@ const civitaiApiMirror = new Elysia({ prefix: "/api/v1" })
   )
   .get(
     "/models/nextPage",
-    async ({ query, status }) => {
+    async ({ query }) => {
       const requester = getRequester();
       const res = await requester.get(query.nextPage);
       const result = await modelsResProcess(res);
@@ -110,4 +110,4 @@ const civitaiApiMirror = new Elysia({ prefix: "/api/v1" })
     }
   );
 
-export default new Elysia({ prefix: "/civitai" }).use(civitaiApiMirror).use(mediaRouter);
+export default new Elysia({ prefix: "/civitai" }).use(localModelRouter).use(civitaiApiMirror);

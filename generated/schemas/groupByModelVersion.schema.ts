@@ -1,0 +1,15 @@
+import type { Prisma } from '../../src/modules/db/generated/client';
+import * as z from 'zod';
+import { ModelVersionWhereInputObjectSchema as ModelVersionWhereInputObjectSchema } from './objects/ModelVersionWhereInput.schema';
+import { ModelVersionOrderByWithAggregationInputObjectSchema as ModelVersionOrderByWithAggregationInputObjectSchema } from './objects/ModelVersionOrderByWithAggregationInput.schema';
+import { ModelVersionScalarWhereWithAggregatesInputObjectSchema as ModelVersionScalarWhereWithAggregatesInputObjectSchema } from './objects/ModelVersionScalarWhereWithAggregatesInput.schema';
+import { ModelVersionScalarFieldEnumSchema } from './enums/ModelVersionScalarFieldEnum.schema';
+import { ModelVersionCountAggregateInputObjectSchema as ModelVersionCountAggregateInputObjectSchema } from './objects/ModelVersionCountAggregateInput.schema';
+import { ModelVersionMinAggregateInputObjectSchema as ModelVersionMinAggregateInputObjectSchema } from './objects/ModelVersionMinAggregateInput.schema';
+import { ModelVersionMaxAggregateInputObjectSchema as ModelVersionMaxAggregateInputObjectSchema } from './objects/ModelVersionMaxAggregateInput.schema';
+import { ModelVersionAvgAggregateInputObjectSchema as ModelVersionAvgAggregateInputObjectSchema } from './objects/ModelVersionAvgAggregateInput.schema';
+import { ModelVersionSumAggregateInputObjectSchema as ModelVersionSumAggregateInputObjectSchema } from './objects/ModelVersionSumAggregateInput.schema';
+
+export const ModelVersionGroupBySchema: z.ZodType<Prisma.ModelVersionGroupByArgs> = z.object({ where: ModelVersionWhereInputObjectSchema.optional(), orderBy: z.union([ModelVersionOrderByWithAggregationInputObjectSchema, ModelVersionOrderByWithAggregationInputObjectSchema.array()]).optional(), having: ModelVersionScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(ModelVersionScalarFieldEnumSchema), _count: z.union([ z.literal(true), ModelVersionCountAggregateInputObjectSchema ]).optional(), _min: ModelVersionMinAggregateInputObjectSchema.optional(), _max: ModelVersionMaxAggregateInputObjectSchema.optional(), _avg: ModelVersionAvgAggregateInputObjectSchema.optional(), _sum: ModelVersionSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.ModelVersionGroupByArgs>;
+
+export const ModelVersionGroupByZodSchema = z.object({ where: ModelVersionWhereInputObjectSchema.optional(), orderBy: z.union([ModelVersionOrderByWithAggregationInputObjectSchema, ModelVersionOrderByWithAggregationInputObjectSchema.array()]).optional(), having: ModelVersionScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(ModelVersionScalarFieldEnumSchema), _count: z.union([ z.literal(true), ModelVersionCountAggregateInputObjectSchema ]).optional(), _min: ModelVersionMinAggregateInputObjectSchema.optional(), _max: ModelVersionMaxAggregateInputObjectSchema.optional(), _avg: ModelVersionAvgAggregateInputObjectSchema.optional(), _sum: ModelVersionSumAggregateInputObjectSchema.optional() }).strict();

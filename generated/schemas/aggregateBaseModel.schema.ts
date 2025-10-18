@@ -1,0 +1,14 @@
+import type { Prisma } from '../../src/modules/db/generated/client';
+import * as z from 'zod';
+import { BaseModelOrderByWithRelationInputObjectSchema as BaseModelOrderByWithRelationInputObjectSchema } from './objects/BaseModelOrderByWithRelationInput.schema';
+import { BaseModelWhereInputObjectSchema as BaseModelWhereInputObjectSchema } from './objects/BaseModelWhereInput.schema';
+import { BaseModelWhereUniqueInputObjectSchema as BaseModelWhereUniqueInputObjectSchema } from './objects/BaseModelWhereUniqueInput.schema';
+import { BaseModelCountAggregateInputObjectSchema as BaseModelCountAggregateInputObjectSchema } from './objects/BaseModelCountAggregateInput.schema';
+import { BaseModelMinAggregateInputObjectSchema as BaseModelMinAggregateInputObjectSchema } from './objects/BaseModelMinAggregateInput.schema';
+import { BaseModelMaxAggregateInputObjectSchema as BaseModelMaxAggregateInputObjectSchema } from './objects/BaseModelMaxAggregateInput.schema';
+import { BaseModelAvgAggregateInputObjectSchema as BaseModelAvgAggregateInputObjectSchema } from './objects/BaseModelAvgAggregateInput.schema';
+import { BaseModelSumAggregateInputObjectSchema as BaseModelSumAggregateInputObjectSchema } from './objects/BaseModelSumAggregateInput.schema';
+
+export const BaseModelAggregateSchema: z.ZodType<Prisma.BaseModelAggregateArgs> = z.object({ orderBy: z.union([BaseModelOrderByWithRelationInputObjectSchema, BaseModelOrderByWithRelationInputObjectSchema.array()]).optional(), where: BaseModelWhereInputObjectSchema.optional(), cursor: BaseModelWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), BaseModelCountAggregateInputObjectSchema ]).optional(), _min: BaseModelMinAggregateInputObjectSchema.optional(), _max: BaseModelMaxAggregateInputObjectSchema.optional(), _avg: BaseModelAvgAggregateInputObjectSchema.optional(), _sum: BaseModelSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.BaseModelAggregateArgs>;
+
+export const BaseModelAggregateZodSchema = z.object({ orderBy: z.union([BaseModelOrderByWithRelationInputObjectSchema, BaseModelOrderByWithRelationInputObjectSchema.array()]).optional(), where: BaseModelWhereInputObjectSchema.optional(), cursor: BaseModelWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), BaseModelCountAggregateInputObjectSchema ]).optional(), _min: BaseModelMinAggregateInputObjectSchema.optional(), _max: BaseModelMaxAggregateInputObjectSchema.optional(), _avg: BaseModelAvgAggregateInputObjectSchema.optional(), _sum: BaseModelSumAggregateInputObjectSchema.optional() }).strict();

@@ -1,0 +1,14 @@
+import type { Prisma } from '../../src/modules/db/generated/client';
+import * as z from 'zod';
+import { BaseModelTypeOrderByWithRelationInputObjectSchema as BaseModelTypeOrderByWithRelationInputObjectSchema } from './objects/BaseModelTypeOrderByWithRelationInput.schema';
+import { BaseModelTypeWhereInputObjectSchema as BaseModelTypeWhereInputObjectSchema } from './objects/BaseModelTypeWhereInput.schema';
+import { BaseModelTypeWhereUniqueInputObjectSchema as BaseModelTypeWhereUniqueInputObjectSchema } from './objects/BaseModelTypeWhereUniqueInput.schema';
+import { BaseModelTypeCountAggregateInputObjectSchema as BaseModelTypeCountAggregateInputObjectSchema } from './objects/BaseModelTypeCountAggregateInput.schema';
+import { BaseModelTypeMinAggregateInputObjectSchema as BaseModelTypeMinAggregateInputObjectSchema } from './objects/BaseModelTypeMinAggregateInput.schema';
+import { BaseModelTypeMaxAggregateInputObjectSchema as BaseModelTypeMaxAggregateInputObjectSchema } from './objects/BaseModelTypeMaxAggregateInput.schema';
+import { BaseModelTypeAvgAggregateInputObjectSchema as BaseModelTypeAvgAggregateInputObjectSchema } from './objects/BaseModelTypeAvgAggregateInput.schema';
+import { BaseModelTypeSumAggregateInputObjectSchema as BaseModelTypeSumAggregateInputObjectSchema } from './objects/BaseModelTypeSumAggregateInput.schema';
+
+export const BaseModelTypeAggregateSchema: z.ZodType<Prisma.BaseModelTypeAggregateArgs> = z.object({ orderBy: z.union([BaseModelTypeOrderByWithRelationInputObjectSchema, BaseModelTypeOrderByWithRelationInputObjectSchema.array()]).optional(), where: BaseModelTypeWhereInputObjectSchema.optional(), cursor: BaseModelTypeWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), BaseModelTypeCountAggregateInputObjectSchema ]).optional(), _min: BaseModelTypeMinAggregateInputObjectSchema.optional(), _max: BaseModelTypeMaxAggregateInputObjectSchema.optional(), _avg: BaseModelTypeAvgAggregateInputObjectSchema.optional(), _sum: BaseModelTypeSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.BaseModelTypeAggregateArgs>;
+
+export const BaseModelTypeAggregateZodSchema = z.object({ orderBy: z.union([BaseModelTypeOrderByWithRelationInputObjectSchema, BaseModelTypeOrderByWithRelationInputObjectSchema.array()]).optional(), where: BaseModelTypeWhereInputObjectSchema.optional(), cursor: BaseModelTypeWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), BaseModelTypeCountAggregateInputObjectSchema ]).optional(), _min: BaseModelTypeMinAggregateInputObjectSchema.optional(), _max: BaseModelTypeMaxAggregateInputObjectSchema.optional(), _avg: BaseModelTypeAvgAggregateInputObjectSchema.optional(), _sum: BaseModelTypeSumAggregateInputObjectSchema.optional() }).strict();

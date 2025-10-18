@@ -1,8 +1,9 @@
 import { prisma } from "../../../db/service";
-import type { Model } from "../../models/models_endpoint";
+import { ModelsRequestSort } from "../../models/baseModels/misc";
 import { findOrCreateOneCreator } from "./creator";
 import { findOrCreateOneModelType } from "./modelType";
-import { ModelsRequestOpts } from "../../models/models_endpoint";
+import type { ModelsRequestOpts, Model } from "../../models/models_endpoint";
+import type { ModelOrderByWithRelationInput, ModelWhereInput } from "../../../db/generated/models";
 
 export async function findOrCreateOneModelId(modelId: Model) {
   const creatorRecord = modelId.creator
@@ -33,69 +34,83 @@ export async function findOrCreateOneModelId(modelId: Model) {
   return record;
 }
 
-// export async function findManyModels(params: ModelsRequestOpts) {
-//   const [records, totalCount] = await prisma.$transaction([
-//     prisma.model.findMany({
-//       where: {
-//         name: {
-//           contains: params.query,
-//         },
-//         tags: {
-//           some: {
-//             name: { in: params.tag },
-//           },
-//         },
-//         creator: {
-//           username: params.username,
-//         },
-//         type: {
-//           name: { in: params.types },
-//         },
-//         nsfw: params.nsfw,
-//         modelVersions: {
-//           some: {
-//             baseModel: {
-//               name: { in: params.baseModels },
-//             },
-//           },
-//         },
-//       },
-//       skip: (params.page - 1) * params.limit, // have to migrate to cursor based query
-//       take: params.limit,
+function processCursorPaginationFindMany(params: ModelsRequestOpts): ModelWhereInput {
+  return {
+    name: {
+      contains: params.query,
+      // mode: 'insensitive', see sql migration "init", added "COLLATE NOCASE" to TEXT Field.
+    },
+    tags: {
+      some: {
+        name: { in: params.tag },
+      },
+    },
+    creator: {
+      username: params.username,
+      // mode: 'insensitive', see sql migration "init", added "COLLATE NOCASE" to TEXT Field.
+    },
+    type: {
+      name: { in: params.types },
+    },
+    nsfw: params.nsfw,
+    modelVersions: {
+      some: {
+        baseModel: {
+          name: { in: params.baseModels },
+        },
+      },
+    },
+  }
+}
 
-//       include: {
-//         creator: true,
-//         modelVersions: true,
-//         tags: true,
-//         type: true,
-//       },
-//     }),
-//     prisma.model.count({
-//       where: {
-//         name: {
-//           contains: params.query,
-//         },
-//         tags: {
-//           some: {
-//             name: { in: params.tag },
-//           },
-//         },
-//         creator: {
-//           username: params.username,
-//         },
-//         type: {
-//           name: { in: params.types },
-//         },
-//         nsfw: params.nsfw,
-//         modelVersions: {
-//           some: {
-//             baseModel: {
-//               name: { in: params.baseModels },
-//             },
-//           },
-//         },
-//       },
-//     }),
-//   ]);
-//   return { records, totalCount };
-// }
+function processSort(sortType?: ModelsRequestSort): ModelOrderByWithRelationInput {
+  switch (sortType) {
+    case "Newest":
+      return {
+        id: 'desc'
+      }
+
+    default: // defualt as Newest
+      return {
+        id: 'desc'
+      }
+  }
+}
+
+export async function cursorPaginationQuery(params: ModelsRequestOpts) {
+  const [records, totalCount] = await prisma.$transaction([
+    prisma.model.findMany({
+      take: 20,
+      where: processCursorPaginationFindMany(params),
+      include: {
+        creator: true,
+        modelVersions: true,
+        tags: true,
+        type: true,
+      },
+      orderBy: processSort(params.sort)
+    }),
+    prisma.model.count({
+      where: processCursorPaginationFindMany(params),
+    }),
+  ])
+
+  return { records, totalCount }
+}
+
+export async function cursorPaginationNext(params: ModelsRequestOpts, modelIdAsCursor: number) {
+  const records = await prisma.model.findMany({
+    cursor: { id: modelIdAsCursor },
+    take: 20,
+    skip: 1,
+    where: processCursorPaginationFindMany(params),
+    include: {
+      creator: true,
+      modelVersions: true,
+      tags: true,
+      type: true,
+    },
+    orderBy: processSort(params.sort)
+  })
+  return records
+}

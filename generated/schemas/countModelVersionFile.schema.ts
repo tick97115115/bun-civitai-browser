@@ -1,0 +1,10 @@
+import type { Prisma } from '../../src/modules/db/generated/client';
+import * as z from 'zod';
+import { ModelVersionFileOrderByWithRelationInputObjectSchema as ModelVersionFileOrderByWithRelationInputObjectSchema } from './objects/ModelVersionFileOrderByWithRelationInput.schema';
+import { ModelVersionFileWhereInputObjectSchema as ModelVersionFileWhereInputObjectSchema } from './objects/ModelVersionFileWhereInput.schema';
+import { ModelVersionFileWhereUniqueInputObjectSchema as ModelVersionFileWhereUniqueInputObjectSchema } from './objects/ModelVersionFileWhereUniqueInput.schema';
+import { ModelVersionFileCountAggregateInputObjectSchema as ModelVersionFileCountAggregateInputObjectSchema } from './objects/ModelVersionFileCountAggregateInput.schema';
+
+export const ModelVersionFileCountSchema: z.ZodType<Prisma.ModelVersionFileCountArgs> = z.object({ orderBy: z.union([ModelVersionFileOrderByWithRelationInputObjectSchema, ModelVersionFileOrderByWithRelationInputObjectSchema.array()]).optional(), where: ModelVersionFileWhereInputObjectSchema.optional(), cursor: ModelVersionFileWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), select: z.union([ z.literal(true), ModelVersionFileCountAggregateInputObjectSchema ]).optional() }).strict() as unknown as z.ZodType<Prisma.ModelVersionFileCountArgs>;
+
+export const ModelVersionFileCountZodSchema = z.object({ orderBy: z.union([ModelVersionFileOrderByWithRelationInputObjectSchema, ModelVersionFileOrderByWithRelationInputObjectSchema.array()]).optional(), where: ModelVersionFileWhereInputObjectSchema.optional(), cursor: ModelVersionFileWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), select: z.union([ z.literal(true), ModelVersionFileCountAggregateInputObjectSchema ]).optional() }).strict();
