@@ -16,6 +16,7 @@ import { extractFilenameFromUrl } from "../service/utils";
 /**
  * The layout of directory:
  * {baseDir} / {modelType} / {modelId} / {modelId}.api-info.json
+ * {baseDir} / {modelType} / {modelId} / {modelFileName}.preview.xxx
  * {baseDir} / {modelType} / {modelId} / {versionId} / {fileId}_{fileName}
  * {baseDir} / {modelType} / {modelId} / {versionId} / {versionId}.api-info.json
  * {baseDir} / "media" / {imageId}.xxx

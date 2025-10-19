@@ -4,6 +4,11 @@ import { findOrCreateOneCreator } from "./creator";
 import { findOrCreateOneModelType } from "./modelType";
 import type { ModelsRequestOpts, Model } from "../../models/models_endpoint";
 import type { ModelOrderByWithRelationInput, ModelWhereInput } from "../../../db/generated/models";
+import { Model as ModelTypeboxSchema } from "../../../db/generated/typebox/Model";
+import { Static } from "elysia";
+import { extractFilenameFromUrl } from "../utils";
+
+export type ModelWithAllRelations = Static<typeof ModelTypeboxSchema>
 
 export async function findOrCreateOneModelId(modelId: Model) {
   const creatorRecord = modelId.creator
@@ -29,6 +34,7 @@ export async function findOrCreateOneModelId(modelId: Model) {
           create: { name: tag },
         })),
       },
+      previewFile: modelId.modelVersions[0]?.images[0]?.url ? extractFilenameFromUrl(modelId.modelVersions[0]?.images[0]?.url) : undefined
     },
   });
   return record;
@@ -112,5 +118,35 @@ export async function cursorPaginationNext(params: ModelsRequestOpts, modelIdAsC
     },
     orderBy: processSort(params.sort)
   })
+  type test = typeof records
   return records
+}
+
+export async function simplePagination(params: ModelsRequestOpts) {
+  // defaultPageSize
+  if (params.limit === undefined) {
+    params.limit = 20
+  }
+  if (params.page === undefined || params.page < 1) {
+    params.page = 1
+  }
+  const [records, totalCount] = await prisma.$transaction([
+    prisma.model.findMany({
+      take: params.limit,
+      skip: (params.page - 1) * params.limit,
+      where: processCursorPaginationFindMany(params),
+      include: {
+        creator: true,
+        modelVersions: true,
+        tags: true,
+        type: true,
+      },
+      orderBy: processSort(params.sort)
+    }),
+    prisma.model.count({
+      where: processCursorPaginationFindMany(params),
+    }),
+  ])
+
+  return { records, totalCount }
 }

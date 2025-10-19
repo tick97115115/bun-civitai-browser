@@ -26,6 +26,7 @@
     "elysia": "latest",
     "es-toolkit": "^1.40.0",
     "fast-glob": "^3.3.3",
+    "file-type": "^21.0.0",
     "jotai": "^2.15.0",
     "jotai-immer": "^0.4.1",
     "ky": "^1.11.0",
@@ -41,7 +42,8 @@
     "bun-types": "latest",
     "prisma": "^6.17.0",
     "prismabox": "^1.1.25",
-    "vite": "^7.1.9"
+    "vite": "^7.1.9",
+    "zustand": "^5.0.8"
   },
   "module": "src/index.js"
 }
