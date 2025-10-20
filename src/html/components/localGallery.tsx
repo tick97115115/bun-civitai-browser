@@ -1,6 +1,10 @@
 import {
   Affix,
   Button,
+  AutoComplete,
+  Select,
+  type SelectProps,
+  Input,
   Card,
   List,
   FloatButton,
@@ -8,21 +12,64 @@ import {
   type PaginationProps,
   Space,
 } from "antd";
+const { Search } = Input;
 import { SyncOutlined, SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { edenTreaty, getFileType } from "../utils";
 import { type ModelsRequestOpts } from "../../modules/civitai/models/models_endpoint";
 import { type ModelWithAllRelations } from "../../modules/civitai/service/crud/modelId";
+import ModalPanel from "./modalPanel";
 
-const FloatingButtons: React.FC = () => (
-  <>
-    <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
-      <FloatButton icon={<SearchOutlined />} />
-      <FloatButton icon={<SyncOutlined />} />
-      <FloatButton.BackTop visibilityHeight={0} />
-    </FloatButton.Group>
-  </>
-);
+// https://ant.design/components/select#select-demo-select-users
+function FloatingButtons() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState(<></>);
+
+  function SearchPanel(
+    searchOpt: ModelsRequestOpts,
+    setSearchOpt: React.Dispatch<React.SetStateAction<ModelsRequestOpts>>
+  ) {
+    const options: SelectProps["options"] = [];
+    const onSearch = (value: string) => {};
+    return (
+      <>
+        <Space direction="vertical">
+          <Search
+            placeholder="input search text"
+            onSearch={onSearch}
+            enterButton
+            value={searchOpt.query}
+          />
+          <Select
+            placeholder="Base model"
+            value={searchOpt.baseModels}
+          ></Select>
+          <Select placeholder="Model Type" value={searchOpt.types}></Select>
+          <Select
+            placeholder="Checkpoint Type"
+            value={searchOpt.checkpointType}
+          ></Select>
+          <Select placeholder="Period" value={searchOpt.period}></Select>
+          <Select placeholder="Sort" value={searchOpt.sort}></Select>
+          <Select placeholder="Tag" value={searchOpt.tag}></Select>
+        </Space>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
+        <FloatButton icon={<SearchOutlined />} onClick={() => {}} />
+        <FloatButton icon={<SyncOutlined />} />
+        <FloatButton.BackTop visibilityHeight={0} />
+      </FloatButton.Group>
+      <ModalPanel isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
+        {modalContent}
+      </ModalPanel>
+    </>
+  );
+}
 
 function localPagination({
   total,
