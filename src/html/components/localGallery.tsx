@@ -3,26 +3,36 @@ import {
   Button,
   Card,
   List,
+  FloatButton,
   Pagination,
   type PaginationProps,
   Space,
 } from "antd";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { SyncOutlined, SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import { useAtom } from "jotai";
-import { DownloadOutlined } from "@ant-design/icons";
 import { edenTreaty, getFileType } from "../utils";
-import { obj2UrlSearchParams } from "../../modules/civitai/service/utils";
 import { type ModelsRequestOpts } from "../../modules/civitai/models/models_endpoint";
 import { type ModelWithAllRelations } from "../../modules/civitai/service/crud/modelId";
 
-function localPagination(
-  { total, searchOpt, setSearchOpt }: {
-    total: number;
-    searchOpt: ModelsRequestOpts;
-    setSearchOpt: React.Dispatch<React.SetStateAction<ModelsRequestOpts>>;
-  },
-) {
+const FloatingButtons: React.FC = () => (
+  <>
+    <FloatButton.Group shape="circle" style={{ insetInlineEnd: 24 }}>
+      <FloatButton icon={<SearchOutlined />} />
+      <FloatButton icon={<SyncOutlined />} />
+      <FloatButton.BackTop visibilityHeight={0} />
+    </FloatButton.Group>
+  </>
+);
+
+function localPagination({
+  total,
+  searchOpt,
+  setSearchOpt,
+}: {
+  total: number;
+  searchOpt: ModelsRequestOpts;
+  setSearchOpt: React.Dispatch<React.SetStateAction<ModelsRequestOpts>>;
+}) {
   const onChange: PaginationProps["onChange"] = (page, pageSize) => {
     setSearchOpt({ ...searchOpt, page, limit: pageSize });
   };
@@ -41,8 +51,7 @@ function localPagination(
 
 function mediaElement(fileName: string) {
   const fileType = getFileType(fileName);
-  const srcPath =
-    `${location.origin}/civitai/local/media/preview?previewFile=${fileName}`;
+  const srcPath = `${location.origin}/civitai/local/media/preview?previewFile=${fileName}`;
   if (fileType === "video") {
     return <video src={srcPath} autoPlay loop></video>;
   } else if (fileType === "image") {
@@ -63,8 +72,8 @@ function paginationGallery() {
   const [totalCount, setTotalCount] = useState<number>(0);
   async function fetchModels(opts: ModelsRequestOpts) {
     try {
-      const { data, error, headers, response, status } = await edenTreaty
-        .civitai.local.models.pagination.post(opts);
+      const { data, error, headers, response, status } =
+        await edenTreaty.civitai.local.models.pagination.post(opts);
       setModels(data?.records);
       setTotalCount(data?.totalCount ?? 0);
     } catch (error) {
@@ -80,7 +89,9 @@ function paginationGallery() {
 
   return (
     <>
-      {loading ? <div>loading</div> : (
+      {loading ? (
+        <div>loading</div>
+      ) : (
         <>
           <Space align="center" direction="vertical" className="w-full px-2">
             {localPagination({
@@ -103,13 +114,15 @@ function paginationGallery() {
                 <List.Item>
                   <Card
                     hoverable
-                    cover={item.previewFile
-                      ? mediaElement(item.previewFile)
-                      : <img title="Have no preview" />}
+                    cover={
+                      item.previewFile ? (
+                        mediaElement(item.previewFile)
+                      ) : (
+                        <img title="Have no preview" />
+                      )
+                    }
                   >
-                    <Card.Meta
-                      description={item.name}
-                    />
+                    <Card.Meta description={item.name} />
                   </Card>
                 </List.Item>
               )}
@@ -120,6 +133,7 @@ function paginationGallery() {
               setSearchOpt,
             })}
           </Space>
+          <FloatingButtons />
         </>
       )}
     </>
