@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
 import "react";
@@ -7,18 +7,19 @@ import "react-dom";
 
 export default defineConfig({
   root: "./src/html",
+  base: "./",
   build: {
-    outDir: '../../public',
+    outDir: "../../public",
   },
   server: {
     proxy: {
-      '/settings': 'http://127.0.0.1:3000',
-      '/civitai': 'http://127.0.0.1:3000',
-    }
+      "/settings": "http://127.0.0.1:3000",
+      "/civitai": "http://127.0.0.1:3000",
+    },
   },
   plugins: [
     react({ babel: { babelrc: true, configFile: true } }),
-    tailwindcss()
+    tailwindcss(),
   ],
   optimizeDeps: {
     include: ["react/jsx-runtime"],

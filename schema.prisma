@@ -6,6 +6,16 @@ datasource db {
   url      = "file:./db.sqlite3"
 }
 
+generator client {
+  provider = "prisma-client"
+  output   = "./src/modules/db/generated"
+
+  runtime                = "bun"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = ""
+}
+
 generator prismabox {
   provider                    = "prismabox"
   // you can optionally specify the output location. Defaults to ./prismabox
@@ -20,15 +30,6 @@ generator prismabox {
   inputModel                  = true
 }
 
-generator client {
-  provider = "prisma-client"
-  output   = "./src/modules/db/generated"
-
-  runtime                = "bun"
-  moduleFormat           = "esm"
-  generatedFileExtension = "ts"
-  importFileExtension    = ""
-}
 
 model Creator {
   id       Int     @id @default(autoincrement())

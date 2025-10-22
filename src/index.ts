@@ -2,9 +2,10 @@ import { Elysia, file } from "elysia";
 import { cors } from "@elysiajs/cors";
 import { openapi } from "@elysiajs/openapi";
 import { html } from "@elysiajs/html";
-import { staticPlugin } from '@elysiajs/static';
+import { staticPlugin } from "@elysiajs/static";
 import SettingsRouter from "./modules/settings";
 import CivitAIRouter from "./modules/civitai/index";
+import webpage from "../public/index.html";
 
 const app = new Elysia()
   .use(html())
@@ -13,9 +14,8 @@ const app = new Elysia()
   .use(staticPlugin())
   .use(SettingsRouter)
   .use(CivitAIRouter)
+  .get("/", webpage)
   .listen(3000);
-export type App = typeof app
+export type App = typeof app;
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.url}\n${app.server?.hostname}:${app.server?.port}`
-);
+console.log(`🦊 Elysia is running at ${app.server?.url}`);
