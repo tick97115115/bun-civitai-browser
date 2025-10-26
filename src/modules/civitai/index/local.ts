@@ -5,10 +5,10 @@ import { getSettings } from "../../settings/service";
 import { getMediaDir } from "../service/fileLayout";
 import { scanModelsAndSyncToDb } from "../service/crud/modelVersion";
 import { cursorPaginationQuery, cursorPaginationNext, simplePagination, type ModelWithAllRelations } from "../service/crud/modelId";
-import { models_request_opts, model } from "../models/models_endpoint";
+import { models_request_opts, model, type Model, model_version, type ModelVersion } from "../models/models_endpoint";
 import { type ModelTypes, model_types } from "../models/baseModels/misc";
-import { Model } from "../../db/generated/typebox/barrel";
-import { getModelIdApiInfoJsonPath, getMediaFilePathByFileName } from "../service/fileLayout";
+import { Model as TypeBox_Model } from "../../db/generated/typebox/barrel";
+import { getModelIdApiInfoJsonPath, getModelVersionApiInfoJsonPath, getMediaFilePathByFileName } from "../service/fileLayout";
 import { extractFilenameFromUrl, removeFileExtension } from "../service/utils";
 import { number } from "arktype/internal/keywords/number.ts";
 
@@ -42,42 +42,6 @@ const mediaController = new Elysia({ prefix: "/media" })
     file(join(getMediaDir(getSettings().basePath), filename))
   )
   .get("/preview", async ({ query: { previewFile } }) => {
-    // // 1. first trying to check if xxx.preview.xxx exists
-    // const jsonFilePath = getModelIdApiInfoJsonPath(
-    //   getSettings().basePath,
-    //   modelType,
-    //   // @ts-ignore
-    //   modelId
-    // )
-    // const modelJson = Bun.file(jsonFilePath)
-    // if (await modelJson.exists() === false) {
-    //   // model json file not existed error
-    //   const message = `model id: ${modelId}\nmodel json file path: ${jsonFilePath}\nCan't find the correspoding model json file.\n`
-    //   console.warn(message)
-    //   throw new ModelJSONFileNotExists(message, jsonFilePath)
-    // }
-    // try {
-    //   const rawData = await modelJson.json()
-    //   const data = model(rawData)
-    //   if (data instanceof type.errors) {
-    //     // model json content validation error
-    //     const message = `model id: ${modelId}\nmodel json file path: ${jsonFilePath}\nJSON content validation Error!\n${data.summary}\n`
-    //     console.warn(message)
-    //     throw new ModelJSONContentValidationError(message, jsonFilePath, rawData, data.summary)
-    //   } else {
-    //     if (data.modelVersions[0]?.images[0]?.url ?? false) {
-    //       const officialPreview = getMediaFilePathByFileName(previewFile)
-    //       return file(officialPreview)
-    //     } else {
-    //       throw new NoPreview("Have no preview for this.")
-    //     }
-    //   }
-    // } catch (error) {
-    //   // model json parse error
-    //   const message = `model id: ${modelId}\nmodel json file path: ${jsonFilePath}\nThe json structure of this model is invalid!\n`
-    //   console.warn(message)
-    //   throw new ModelJSONParseError(message, jsonFilePath, await modelJson.text())
-    // }
     try {
       const officialPreview = getMediaFilePathByFileName(previewFile)
       return file(officialPreview)
@@ -124,6 +88,123 @@ export class ModelJSONParseError extends Error {
   }
 }
 
+async function parseModelJson(basePath: string, modelType: ModelTypes, modelId: number): Promise<Model> {
+  const modelJsonPath = getModelIdApiInfoJsonPath(basePath, modelType, modelId)
+  const modelJsonFile = Bun.file(modelJsonPath)
+  if (await modelJsonFile.exists() === false) {
+    // model json file do not exists error
+    const message = `model id: ${modelId}\nmodel json file path: ${modelJsonPath}\nCan't find the correspoding model json file.\n`
+    console.warn(message)
+    throw new ModelJSONFileNotExists(message, modelJsonPath)
+  }
+  try {
+    const rawData = await modelJsonFile.json()
+    const data = model(rawData)
+    if (data instanceof type.errors) {
+      // model json content validation error
+      const message = `model id: ${modelId}\nmodel json file path: ${modelJsonPath}\nJSON content validation Error!\n${data.summary}\n`
+      console.warn(message)
+      throw new ModelJSONContentValidationError(message, modelJsonPath, rawData, data.summary)
+    } else {
+      return data
+    }
+  } catch (error) {
+    // model json parse error
+    const message = `model id: ${modelId}\nmodel json file path: ${modelJsonPath}\nThe json structure of this model is invalid!\n`
+    console.warn(message)
+    throw new ModelJSONParseError(message, modelJsonPath, await modelJsonFile.text())
+  }
+}
+
+async function parseModelVersionJson(basePath: string, modelType: ModelTypes, modelId: number, modelVersionId: number): Promise<ModelVersion> {
+  const modelVersionJsonPath = getModelVersionApiInfoJsonPath(basePath, modelType, modelId, modelVersionId)
+  const modelVersionJsonFile = Bun.file(modelVersionJsonPath)
+  if (await modelVersionJsonFile.exists() === false) {
+    // model json file do not exists error
+    const message = `model version id: ${modelVersionId}\njson file path: ${modelVersionJsonPath}\nCan't find the correspoding model json file.\n`
+    console.warn(message)
+    throw new ModelJSONFileNotExists(message, modelVersionJsonPath)
+  }
+  try {
+    const rawData = await modelVersionJsonFile.json()
+    const data = model_version(rawData)
+    if (data instanceof type.errors) {
+      // model json content validation error
+      const message = `model version id: ${modelId}\json file path: ${modelVersionJsonPath}\nJSON content validation Error!\n${data.summary}\n`
+      console.warn(message)
+      throw new ModelJSONContentValidationError(message, modelVersionJsonPath, rawData, data.summary)
+    } else {
+      return data
+    }
+  } catch (error) {
+    // model json parse error
+    const message = `model version id: ${modelId}\nmodel json file path: ${modelVersionJsonPath}\nThe json structure of this model is invalid!\n`
+    console.warn(message)
+    throw new ModelJSONParseError(message, modelVersionJsonPath, await modelVersionJsonFile.text())
+  }
+}
+
+const localModelsApi = new Elysia({ prefix: `/models` })
+  .get(
+    "/",
+    async ({ query }) => {
+      const res = await cursorPaginationQuery(query)
+      return {
+        ...res,
+      };
+    },
+    {
+      query: models_request_opts,
+      response: t.Object({
+        totalCount: t.Number(),
+        records: t.Array(TypeBox_Model),
+      })
+    }
+  )
+  .get(
+    "/nextPage",
+    async ({ query }) => {
+      const res = await cursorPaginationNext(query, query.modelIdAsCursor);
+
+      return {
+        records: res,
+      };
+    },
+    {
+      query: models_request_opts.and({ modelIdAsCursor: 'number' }),
+      response: t.Object({
+        records: t.Array(TypeBox_Model),
+      })
+    }
+  )
+  .post(
+    "/pagination",
+    async ({ body }) => {
+      const res = await simplePagination(body)
+
+      return {
+        ...res,
+      };
+    },
+    {
+      body: models_request_opts,
+      response: t.Object({
+        totalCount: t.Number(),
+        records: t.Array(TypeBox_Model),
+      })
+    }
+  )
+  .post("/modelId", async ({ body }) => {
+    const settings = getSettings()
+    const modelVersions: Array<ModelVersion> = []
+    const modelJson = await parseModelJson(settings.basePath, body.type, body.modelId)
+    for await (const element of body.modelVersionIdNumbers) {
+      modelVersions.push(await parseModelVersionJson(settings.basePath, body.type, body.modelId, element))
+    }
+    modelJson.modelVersions = modelVersions
+    return modelJson
+  }, { body: type({ modelId: 'number.integer', type: model_types, modelVersionIdNumbers: type('number.integer').array() }), response: model })
+
 export default new Elysia({ prefix: `/local` })
   .error({ ModelJSONFileNotExists, ModelJSONContentValidationError, ModelJSONParseError })
   .onError(({ code, error, status }) => {
@@ -137,56 +218,8 @@ export default new Elysia({ prefix: `/local` })
     }
   })
   .use(mediaController)
+  .use(localModelsApi)
   .head("/scanModels", async () => {
     await scanModelsAndSyncToDb()
     return true
   })
-  .get(
-    "/models",
-    async ({ query }) => {
-      const res = await cursorPaginationQuery(query)
-      return {
-        ...res,
-      };
-    },
-    {
-      query: models_request_opts,
-      response: t.Object({
-        totalCount: t.Number(),
-        records: t.Array(Model),
-      })
-    }
-  )
-  .get(
-    "/models/nextPage",
-    async ({ query }) => {
-      const res = await cursorPaginationNext(query, query.modelIdAsCursor);
-
-      return {
-        records: res,
-      };
-    },
-    {
-      query: models_request_opts.and({ modelIdAsCursor: 'number' }),
-      response: t.Object({
-        records: t.Array(Model),
-      })
-    }
-  )
-  .post(
-    "/models/pagination",
-    async ({ body }) => {
-      const res = await simplePagination(body)
-
-      return {
-        ...res,
-      };
-    },
-    {
-      body: models_request_opts,
-      response: t.Object({
-        totalCount: t.Number(),
-        records: t.Array(Model),
-      })
-    }
-  )

@@ -5,16 +5,14 @@ import { html } from "@elysiajs/html";
 import { staticPlugin } from "@elysiajs/static";
 import SettingsRouter from "./modules/settings";
 import CivitAIRouter from "./modules/civitai/index";
-import webpage from "../public/index.html";
 
 const app = new Elysia()
   .use(html())
   .use(cors())
   .use(openapi())
-  .use(staticPlugin())
+  .use(staticPlugin({ prefix: "/" }))
   .use(SettingsRouter)
   .use(CivitAIRouter)
-  .get("/", webpage)
   .listen(3000);
 export type App = typeof app;
 
