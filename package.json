@@ -23,6 +23,7 @@
     "@tanstack/react-query": "^5.90.5",
     "antd": "^5.27.6",
     "arktype": "^2.1.23",
+    "clipboardy": "^5.0.0",
     "conf": "^15.0.2",
     "elysia": "1.4.12",
     "es-toolkit": "^1.40.0",

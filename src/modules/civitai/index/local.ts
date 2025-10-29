@@ -7,7 +7,7 @@ import { scanModelsAndSyncToDb } from "../service/crud/modelVersion";
 import { cursorPaginationQuery, cursorPaginationNext, simplePagination, type ModelWithAllRelations } from "../service/crud/modelId";
 import { models_request_opts, model, type Model, model_version, type ModelVersion } from "../models/models_endpoint";
 import { type ModelTypes, model_types } from "../models/baseModels/misc";
-import { Model as TypeBox_Model } from "../../db/generated/typebox/barrel";
+import { Model as TypeBox_Model } from "../../../../generated/typebox/barrel";
 import { getModelIdApiInfoJsonPath, getModelVersionApiInfoJsonPath, getMediaFilePathByFileName } from "../service/fileLayout";
 import { extractFilenameFromUrl, removeFileExtension } from "../service/utils";
 import { number } from "arktype/internal/keywords/number.ts";

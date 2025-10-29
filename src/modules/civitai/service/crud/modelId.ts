@@ -3,8 +3,8 @@ import { ModelsRequestSort } from "../../models/baseModels/misc";
 import { findOrCreateOneCreator } from "./creator";
 import { findOrCreateOneModelType } from "./modelType";
 import type { ModelsRequestOpts, Model } from "../../models/models_endpoint";
-import type { ModelOrderByWithRelationInput, ModelWhereInput } from "../../../db/generated/models";
-import { Model as ModelTypeboxSchema } from "../../../db/generated/typebox/Model";
+import type { ModelOrderByWithRelationInput, ModelWhereInput } from "../../../../../generated/models";
+import { Model as ModelTypeboxSchema } from "../../../../../generated/typebox/Model";
 import { Static } from "elysia";
 import { extractFilenameFromUrl } from "../utils";
 

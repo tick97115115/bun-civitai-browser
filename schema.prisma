@@ -8,7 +8,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client"
-  output   = "./src/modules/db/generated"
+  output   = "./generated"
 
   runtime                = "bun"
   moduleFormat           = "esm"
@@ -19,7 +19,7 @@ generator client {
 generator prismabox {
   provider                    = "prismabox"
   // you can optionally specify the output location. Defaults to ./prismabox
-  output                      = "./src/modules/db/generated/typebox"
+  output                      = "./generated/typebox"
   // if you want, you can customize the imported variable name that is used for the schemes. Defaults to "Type" which is what the standard typebox package offers
   typeboxImportVariableName   = "t"
   // you also can specify the dependency from which the above import should happen. This is useful if a package re-exports the typebox package and you would like to use that
@@ -29,7 +29,6 @@ generator prismabox {
   // optionally enable the data model generation. See the data model section below for more info
   inputModel                  = true
 }
-
 
 model Creator {
   id       Int     @id @default(autoincrement())

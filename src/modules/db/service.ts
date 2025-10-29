@@ -1,4 +1,4 @@
-import { PrismaClient } from "./generated/client";
+import { PrismaClient } from "../../../generated/client";
 import { PrismaBunSQLite } from "@synapsenwerkstatt/prisma-bun-sqlite-adapter";
 
 // Create adapter factory

@@ -3,10 +3,14 @@ import {
   AutoComplete,
   Card,
   Col,
+  Descriptions,
+  type DescriptionsProps,
+  Flex,
   FloatButton,
   Input,
   List,
   Modal,
+  notification,
   Pagination,
   type PaginationProps,
   Row,
@@ -18,6 +22,7 @@ import {
 const { Search } = Input;
 import { SearchOutlined, SyncOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
+import clipboard from "clipboardy";
 import { edenTreaty, getFileType } from "../utils";
 import {
   Model,
@@ -173,7 +178,7 @@ function paginationGallery() {
             tabPosition="top"
             onChange={(id) => setActiveVersionId(id)}
             items={data?.modelVersions.map((v) => {
-              const rightSide = (
+              const leftSide = (
                 <>
                   <div onClick={() => console.log("yes")}>
                     {dbModel.previewFile
@@ -182,6 +187,93 @@ function paginationGallery() {
                       )
                       : <img title="Have no preview" />}
                   </div>
+                </>
+              );
+              const descriptionItems: DescriptionsProps["items"] = [
+                {
+                  key: v.id,
+                  label: "Version ID",
+                  children: v.id,
+                },
+                {
+                  key: v.baseModel,
+                  label: "Base Model",
+                  children: v.baseModel,
+                },
+                {
+                  key: 3,
+                  label: "Model Type",
+                  children: data.type,
+                },
+                {
+                  key: 4,
+                  label: "Publish Date",
+                  span: "filled",
+                  children: v.publishedAt?.toString() ?? "Null",
+                },
+                {
+                  key: 5,
+                  label: "Tags",
+                  span: "filled",
+                  children: (
+                    <Flex wrap gap="small">
+                      {v.trainedWords.map((tagStr) => (
+                        <div
+                          onClick={async () => {
+                            await clipboard.write(tagStr);
+                            return notification.success({
+                              message: "Copied to clipboard",
+                            });
+                          }}
+                          className="
+                        bg-blue-500 hover:bg-blue-700 text-white 
+                          font-bold p-1 rounded transition-all 
+                          duration-300 transform hover:scale-105
+                          hover:cursor-pointer"
+                        >
+                          {tagStr}
+                        </div>
+                      ))}
+                    </Flex>
+                  ),
+                },
+                {
+                  key: 6,
+                  label: "Model Description",
+                  span: "filled",
+                  children: data.description
+                    ? (
+                      <div
+                        dangerouslySetInnerHTML={{ __html: data.description }}
+                      />
+                    )
+                    : undefined,
+                  // data.description,
+                },
+                {
+                  key: 7,
+                  label: "Model Version Description",
+                  span: "filled",
+                  children: v.description
+                    ? (
+                      <div
+                        dangerouslySetInnerHTML={{ __html: v.description }}
+                      />
+                    )
+                    : undefined,
+                  // v.description
+                },
+              ];
+              const rightSide = (
+                <>
+                  <Space direction="vertical">
+                    <Descriptions
+                      title="Model Version Details"
+                      layout="vertical"
+                      items={descriptionItems}
+                    >
+                    </Descriptions>
+                  </Space>
                 </>
               );
               return {
@@ -198,9 +290,9 @@ function paginationGallery() {
                         {data.name}
                       </a>
                     </div>
-                    <Row>
-                      <Col sm={8} lg={6}>{rightSide}</Col>
-                      <Col sm={16} lg={18}></Col>
+                    <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+                      <Col sm={8} lg={6}>{leftSide}</Col>
+                      <Col sm={16} lg={18}>{rightSide}</Col>
                     </Row>
                   </Card>
                 ),
@@ -222,11 +314,6 @@ function paginationGallery() {
       {loading ? <div>loading</div> : (
         <>
           <Space align="center" direction="vertical" className="w-full px-2">
-            {localPagination({
-              total: totalCount,
-              searchOpt: searchOpt,
-              setSearchOpt,
-            })}
             <List
               grid={{
                 gutter: 16,
@@ -254,6 +341,14 @@ function paginationGallery() {
                 </List.Item>
               )}
             />
+
+            <Affix offsetBottom={5}>
+              {localPagination({
+                total: totalCount,
+                searchOpt: searchOpt,
+                setSearchOpt,
+              })}
+            </Affix>
           </Space>
           <Modal
             width={1000}
