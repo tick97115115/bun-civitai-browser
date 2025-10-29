@@ -23,6 +23,7 @@ const { Search } = Input;
 import { SearchOutlined, SyncOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import clipboard from "clipboardy";
+import DOMPurify from "dompurify";
 import { edenTreaty, getFileType } from "../utils";
 import {
   Model,
@@ -32,6 +33,7 @@ import {
 import { type ModelTypes } from "../../modules/civitai/models/baseModels/misc";
 import { type ModelWithAllRelations } from "../../modules/civitai/service/crud/modelId";
 import ModalPanel from "./modalPanel";
+import { extractFilenameFromUrl } from "#modules/civitai/service/utils";
 
 // https://ant.design/components/select#select-demo-select-users
 function FloatingButtons() {
@@ -118,7 +120,7 @@ function mediaElement(fileName: string) {
   if (fileType === "video") {
     return <video src={srcPath} autoPlay loop></video>;
   } else if (fileType === "image") {
-    return <img src={srcPath}></img>;
+    return <img src={srcPath} />;
   } else {
     return <p>unknown file type: {fileName}</p>;
   }
@@ -183,7 +185,7 @@ function paginationGallery() {
                   <div onClick={() => console.log("yes")}>
                     {dbModel.previewFile
                       ? (
-                        mediaElement(dbModel.previewFile)
+                        mediaElement(extractFilenameFromUrl(v.images[0]?.url))
                       )
                       : <img title="Have no preview" />}
                   </div>
@@ -244,7 +246,10 @@ function paginationGallery() {
                   children: data.description
                     ? (
                       <div
-                        dangerouslySetInnerHTML={{ __html: data.description }}
+                        className="bg-gray-300"
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(data.description),
+                        }}
                       />
                     )
                     : undefined,
@@ -257,7 +262,10 @@ function paginationGallery() {
                   children: v.description
                     ? (
                       <div
-                        dangerouslySetInnerHTML={{ __html: v.description }}
+                        className="bg-gray-300"
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(v.description),
+                        }}
                       />
                     )
                     : undefined,
@@ -285,7 +293,7 @@ function paginationGallery() {
                       <a
                         className="clickable-title"
                         target="_blank"
-                        href={`https://civitai.com/models/${dbModel.id}?modelVersionId=${activeVersionId}`}
+                        href={`https://civitai.com/models/${dbModel.id}?modelVersionId=${v.id}`}
                       >
                         {data.name}
                       </a>
